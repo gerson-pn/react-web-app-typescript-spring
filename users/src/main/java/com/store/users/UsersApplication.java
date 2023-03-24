@@ -16,7 +16,7 @@ public class UsersApplication implements CommandLineRunner {
 	private DatabaseInitializer databaseInitializer;
 
 	public static void main(String[] args) {
-		// SpringApplication.run(UsersApplication.class, args);
+		//SpringApplication.run(UsersApplication.class, args);
 		Map<String, Object> configuracao = new HashMap<>();
 		configuracao.put("server.port", "5555");
 		/*configuracao.put("spring.datasource.url", "jdbc:mysql://localhost:3306/database");
