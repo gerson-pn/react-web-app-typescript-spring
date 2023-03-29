@@ -10,6 +10,7 @@ import com.store.users.entities.CredentialApp;
 import com.store.users.entities.Phone;
 import com.store.users.entities.UserApp;
 import com.store.users.repositories.UserAppRepository;
+import com.store.users.security.roles.Role;
 
 @Service
 public class DatabaseInitializer {
@@ -36,7 +37,7 @@ public class DatabaseInitializer {
 		Phone phone2 = new Phone();
 		phone2.setNumber("(99) 9999-9999");
 		user2.getPhones().add(phone2);
-
+		
 		repository.save(user2);
 
 		UserApp root = new UserApp();
@@ -51,6 +52,7 @@ public class DatabaseInitializer {
 		String password = encoder.encode("root");
 		credencial.setPassword(password);
 		credencial.setUserName("root");
+		credencial.getRoles().add(Role.ROLE_ROOT);
 		root.setCredential(credencial);
 
 		repository.save(root);

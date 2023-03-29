@@ -1,7 +1,9 @@
 package com.store.users.services.responseentities.userapp;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -12,15 +14,21 @@ import com.store.users.entities.UserApp;
 import com.store.users.repositories.UserAppRepository;
 
 @Service
-public class UserAppWriter {
+public class UserAppUpdaterService {
 	@Autowired
 	private UserAppRepository repository;
 
-	public ResponseEntity<?> save(UserApp user) {
+	public ResponseEntity<UserApp> update(UserApp updateUser) {
 		try {
-			repository.save(user);
-			return new ResponseEntity<>(HttpStatus.CREATED);
-		} catch (DataIntegrityViolationException e) {
+			Optional<UserApp> currentUser = repository.findById(updateUser.getId());
+			UserApp target = currentUser.orElse(null);
+			target.setCredential(updateUser.getCredential());
+			target.setName(updateUser.getName());
+			target.getPhones().clear();
+			target.getPhones().addAll(updateUser.getPhones());
+			repository.save(updateUser);
+			return new ResponseEntity<>(target, HttpStatus.ACCEPTED);
+		} catch (InvalidDataAccessApiUsageException e) {
 			MultiValueMap<String, String> header = new LinkedMultiValueMap<>();
 			header.add(e.getCause().getMessage(), e.getLocalizedMessage());
 			return new ResponseEntity<>(header, HttpStatus.BAD_REQUEST);

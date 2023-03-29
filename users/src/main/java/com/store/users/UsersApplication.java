@@ -19,15 +19,12 @@ public class UsersApplication implements CommandLineRunner {
 		//SpringApplication.run(UsersApplication.class, args);
 		Map<String, Object> appConfiguration = new HashMap<>();
 		appConfiguration.put("server.port", "5555");
-		/*configuracao.put("spring.datasource.url", "jdbc:mysql://localhost:3306/database");
-		configuracao.put("spring.datasource.username", "root");
-		configuracao.put("spring.datasource.password", "root");
-		configuracao.put("spring.jpa.hibernate.ddl-auto", "create");*/
+		/*appConfiguration.put("spring.datasource.url", "jdbc:mysql://localhost:3306/database");
+		appConfiguration.put("spring.datasource.username", "root");
+		appConfiguration.put("spring.datasource.password", "root");*/
+		appConfiguration.put("spring.jpa.hibernate.ddl-auto", "create");
 		appConfiguration.put("spring.jpa.show-sql", "true");
 		
-		/*JWT Config*/
-		
-
 		SpringApplication app = new SpringApplication(UsersApplication.class);
 		app.setDefaultProperties(appConfiguration);
 		app.run(args);

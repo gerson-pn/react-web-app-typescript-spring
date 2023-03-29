@@ -14,7 +14,7 @@ import com.store.users.entities.UserApp;
 import com.store.users.repositories.UserAppRepository;
 
 @Service
-public class UserAppDeleter {
+public class UserAppDeleterService {
 	@Autowired
 	private UserAppRepository repository;
 

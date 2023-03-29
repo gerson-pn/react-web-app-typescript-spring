@@ -9,8 +9,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.store.users.entities.CredentialApp;
-import com.store.users.security.roles.RoleTranslator;
-import com.store.users.security.roles.Roles;
+import com.store.users.security.roles.Role;
+import com.store.users.services.credential.CredentialAppValidatorService;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,15 +21,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @SuppressWarnings("serial")
 public class UserDetailsImpl implements UserDetails {
+	private CredentialAppValidatorService service;
 	private CredentialApp credential;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		RoleTranslator translator = new RoleTranslator();
 		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-		Roles role = translator.translate(this.credential);
-		SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.toString());
-		authorities.add(authority);
+		if (service.isCredentialValid(this.credential)) {
+			for (Role role : this.credential.getRoles()) {
+				SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.toString());
+				authorities.add(authority);
+			}
+		} else {
+			SimpleGrantedAuthority authority = new SimpleGrantedAuthority(Role.ROLE_NONROOT.toString());
+			authorities.add(authority);
+		}
+
 		return authorities;
 	}
 

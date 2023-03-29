@@ -7,11 +7,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import com.store.users.entities.UserApp;
 import com.store.users.repositories.UserAppRepository;
 
-public class UserAppReader {
+@Service
+public class UserAppReaderService {
 	@Autowired
 	private UserAppRepository repository;
 
