@@ -3,6 +3,7 @@ package com.store.users.services;
 import java.util.Calendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.store.users.entities.CredentialApp;
@@ -14,6 +15,8 @@ import com.store.users.repositories.UserAppRepository;
 public class DatabaseInitializer {
 	@Autowired
 	private UserAppRepository repository;
+	
+	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 	public void initializeDatabase() {
 		UserApp user = new UserApp();
@@ -45,7 +48,8 @@ public class DatabaseInitializer {
 		root.getPhones().add(phone3);
 
 		CredentialApp credencial = new CredentialApp();
-		credencial.setPassword("root");
+		String password = encoder.encode("root");
+		credencial.setPassword(password);
 		credencial.setUserName("root");
 		root.setCredential(credencial);
 

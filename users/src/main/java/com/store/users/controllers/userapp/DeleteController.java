@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.store.users.entities.UserApp;
-import com.store.users.services.userapp.UserAppDeleter;
+import com.store.users.services.responseentities.userapp.UserAppDeleter;
 
 @CrossOrigin
 @RestController

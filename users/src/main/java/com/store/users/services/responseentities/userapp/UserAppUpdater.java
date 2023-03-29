@@ -1,4 +1,4 @@
-package com.store.users.services.userapp;
+package com.store.users.services.responseentities.userapp;
 
 import java.util.Optional;
 

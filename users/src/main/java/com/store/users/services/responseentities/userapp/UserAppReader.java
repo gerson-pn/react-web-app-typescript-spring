@@ -1,4 +1,4 @@
-package com.store.users.services.userapp;
+package com.store.users.services.responseentities.userapp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +15,10 @@ import com.store.users.repositories.UserAppRepository;
 @Service
 public class UserAppReader {
 	@Autowired
-	private UserAppRepository repositorio;
+	private UserAppRepository repository;
 
 	public ResponseEntity<UserApp> getUser(Long id) {
-		Optional<UserApp> currentUser = repositorio.findById(id);
+		Optional<UserApp> currentUser = repository.findById(id);
 		UserApp user = currentUser.orElse(null);
 		if (user == null) {
 			return new ResponseEntity<UserApp>(user, HttpStatus.NOT_FOUND);
@@ -28,7 +28,7 @@ public class UserAppReader {
 	}
 
 	public ResponseEntity<List<UserApp>> getUsers() {
-		List<UserApp> users = repositorio.findAll();
+		List<UserApp> users = repository.findAll();
 		List<UserApp> rootUsers = new ArrayList<>();
 		for (UserApp user : users) {
 			if (user.getCredential() != null) {
@@ -40,7 +40,7 @@ public class UserAppReader {
 	}
 
 	public ResponseEntity<List<UserApp>> getRootUsers() {
-		List<UserApp> users = repositorio.findAll();
+		List<UserApp> users = repository.findAll();
 		List<UserApp> rootUsers = new ArrayList<>();
 		for (UserApp user : users) {
 			if (user.getCredential() != null) {

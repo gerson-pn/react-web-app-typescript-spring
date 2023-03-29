@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.store.users.entities.UserApp;
-import com.store.users.services.userapp.UserAppReader;
+import com.store.users.services.responseentities.userapp.UserAppReader;
 
 @CrossOrigin
 @RestController
