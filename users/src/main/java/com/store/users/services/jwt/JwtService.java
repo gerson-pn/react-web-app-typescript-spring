@@ -19,7 +19,7 @@ public class JwtService {
 		return Jwts.parser().setSigningKey(secret.getBytes()).parseClaimsJws(jwtToken).getBody();
 	}
 
-	private Boolean isTokenExpired(String jwtToken, String secret) {
+	public Boolean isNotTokenExpired(String jwtToken, String secret) {
 		Claims claims = extractClaims(jwtToken, secret);
 		Date now = new Date(System.currentTimeMillis());
 		return claims.getExpiration().before(now);
@@ -29,5 +29,10 @@ public class JwtService {
 		Claims claims = extractClaims(jwtToken, secret);
 		String userName = claims.getSubject();
 		return userName;
+	}
+
+	public Boolean validateToken(String jwtToken, String secret, String usernName) {
+		String subject = extractUsername(jwtToken, secret);
+		return (subject.equals(usernName) && isNotTokenExpired(jwtToken, secret));
 	}
 }
