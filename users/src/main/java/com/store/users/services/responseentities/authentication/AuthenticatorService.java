@@ -33,6 +33,7 @@ public class AuthenticatorService {
 				String jwtToken = this.jwtService.createToken(userDetails.getUsername(), duration, secret);
 				MultiValueMap<String, String> header = new LinkedMultiValueMap<>();
 				header.add("Authorization", "Bearer " + jwtToken);
+				header.add("Access-Control-Expose-Headers", "Authorization");
 				response = new ResponseEntity<>(header, HttpStatus.ACCEPTED);
 			}
 		}
