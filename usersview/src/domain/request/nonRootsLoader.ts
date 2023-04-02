@@ -1,17 +1,15 @@
 import { URI } from "../uri/uri";
 import UriMounter from "../uri/uriMounter";
 
-export default class Authenticator {
+export default class NonRootsLoader {
 
-    private createToken(response: Response) {
-        let object = { token: '', message: '' }
-        response.headers.forEach(element => {
-            if (element.startsWith('Bearer ')) {
-                object.token = element
-            }
-        })
-        return object
+    private createObject(response: Response) {
+        console.log(`chegou na função createObjec`)
+        let objects = []
+        console.log(response)
+        return objects
     }
+
     private createMessage(response: Response) {
         let object = { token: '', message: '' }
         object.message = `something is going wrong - (Status code: ${response.status})`
@@ -23,20 +21,21 @@ export default class Authenticator {
         return object
     }
 
-    public async authenticate(credential: Object) {
+    public async load(token: string) {
         let headers = new Headers()
+        headers.append('Authorization', token)
         headers.append('Content-Type', 'application/json')
         let mounter = new UriMounter()
-        let response = await fetch(mounter.assemble(URI.AUTHENTICATION), {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify(credential)
+        let response = await fetch(mounter.assemble(URI.NONROOTS), {
+            method: 'GET',
+            headers: headers
         })
             .then(response => {
-                if (response.ok) {
-                    return this.createToken(response)
-                } else {
-                    return this.createMessage(response)
+                if (response.status === 302 ) {
+                    console.log(`chegou aqui!!`)
+                    console.log(response.json())
+                }else{
+                    console.log(`deu ruim`)
                 }
             })
             .catch(error => {

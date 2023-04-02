@@ -5,9 +5,9 @@ type props = {
     type: string
 }
 
-export default class Alert extends Component<props> {
+export default class SimpleAlert extends Component<props> {
     render() {
-        if (this.props.message) {
+        if (this.props.message && this.props.type) {
             return (
                 <>
                     <br />
