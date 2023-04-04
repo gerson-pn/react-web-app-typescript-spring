@@ -7,13 +7,9 @@ import Authenticator from "../../domain/request/authenticator";
 import SimpleAlert from "../../component/simpleAlert";
 import AuthenticationContext from "../../component/context/authenticationContext";
 import { Navigate } from "react-router-dom";
+import loginStateType from "../../domain/type/loginStateType";
 
-type state = {
-    message: string
-    token: string
-}
-
-export default class Login extends Component<{}, state> {
+export default class Login extends Component<{}, loginStateType> {
     static contextType = AuthenticationContext
     private username: string
     private password: string
@@ -27,16 +23,7 @@ export default class Login extends Component<{}, state> {
         this.redirect = this.redirect.bind(this)
     }
 
-    /**
-     * In this application this method is implemented just to show the authentication
-     *  token obtained by the component from the authentication context.
-     */
-    componentDidMount(): void {
-        let authenticationContext: any = this.context
-        console.log(`token: ${authenticationContext.token}`)
-    }
-
-    private loadData(event) {
+    loadData(event) {
         let id = event.target.id
         let value = event.target.value
         if (id === 'username') {
@@ -46,7 +33,7 @@ export default class Login extends Component<{}, state> {
         }
     }
 
-    private authenticate(event) {
+    authenticate(event) {
         event.preventDefault()
         event.target.reset()
         if (this.username && this.password) {
@@ -71,11 +58,11 @@ export default class Login extends Component<{}, state> {
         }
     }
 
-    private redirect(token: string) {
+    redirect(token: string) {
         if (token === '') {
             return (
-                <div className="container text-center flex-container">
-                    <form onSubmit={(event) => this.authenticate(event)} className="flex-item">
+                <div className="container text-center flex-container-login">
+                    <form onSubmit={(event) => this.authenticate(event)} className="flex-item-login">
                         <SimpleAlert message={this.state.message} type="alert-warning" />
                         <legend>Authentication</legend>
                         <div className="input-group mb-3">

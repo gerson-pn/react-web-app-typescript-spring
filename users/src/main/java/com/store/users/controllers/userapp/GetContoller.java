@@ -18,21 +18,19 @@ import com.store.users.services.responseentities.userapp.UserAppReaderService;
 public class GetContoller {
 	@Autowired
 	private UserAppReaderService userReader;
-	
+
 	@GetMapping("/user/{id}")
 	@PreAuthorize("hasAnyAuthority('ROLE_READER','ROLE_ROOT')")
 	public ResponseEntity<UserApp> getUser(@PathVariable Long id) {
 		return userReader.getUser(id);
 	}
 
-	
 	@GetMapping("/user/nonroots")
 	@PreAuthorize("hasAnyAuthority('ROLE_READER','ROLE_ROOT')")
 	public ResponseEntity<List<UserApp>> getUsers() {
 		return userReader.getUsers();
 	}
 
-	
 	@GetMapping("/user/roots")
 	@PreAuthorize("hasAuthority('ROLE_ROOT')")
 	public ResponseEntity<List<UserApp>> getRootUsers() {

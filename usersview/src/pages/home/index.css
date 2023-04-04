@@ -1,8 +1,9 @@
 .flex-container {
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    align-content: center
+    align-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 .flex-item{
     flex-grow: 1;

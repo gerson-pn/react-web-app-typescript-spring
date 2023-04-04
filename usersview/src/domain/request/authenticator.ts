@@ -1,28 +1,8 @@
+import loginStateType from "../type/loginStateType";
 import { URI } from "../uri/uri";
 import UriMounter from "../uri/uriMounter";
 
 export default class Authenticator {
-
-    private createToken(response: Response) {
-        let object = { token: '', message: '' }
-        response.headers.forEach(element => {
-            if (element.startsWith('Bearer ')) {
-                object.token = element
-            }
-        })
-        return object
-    }
-    private createMessage(response: Response) {
-        let object = { token: '', message: '' }
-        object.message = `something is going wrong - (Status code: ${response.status})`
-        return object
-    }
-    private createError(error: any) {
-        let object = { token: '', message: '' }
-        object.message = `something is going wrong - connection fail`
-        return object
-    }
-
     public async authenticate(credential: Object) {
         let headers = new Headers()
         headers.append('Content-Type', 'application/json')
@@ -34,13 +14,23 @@ export default class Authenticator {
         })
             .then(response => {
                 if (response.ok) {
-                    return this.createToken(response)
+                    let object: loginStateType = { token: '', message: '' }
+                    response.headers.forEach(element => {
+                        if (element.startsWith('Bearer ')) {
+                            object.token = element
+                        }
+                    })
+                    return object
                 } else {
-                    return this.createMessage(response)
+                    let object: loginStateType = { token: '', message: '' }
+                    object.message = `something is going wrong - (Status code: ${response.status})`
+                    return object
                 }
             })
             .catch(error => {
-                return this.createError(error)
+                let object: loginStateType = { token: '', message: '' }
+                object.message = `something is going wrong - connection fail`
+                return object
             })
         return response;
     }

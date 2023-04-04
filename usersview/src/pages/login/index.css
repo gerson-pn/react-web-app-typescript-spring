@@ -1,10 +1,10 @@
-.flex-container {
-    height: 600px;
+.flex-container-login {
+    margin-top: 200px;
     display: flex;
     justify-content: center;
+    align-content: stretch;
     align-items: center;
-    align-content: center
 }
-.flex-item{
+.flex-item-login{
     flex-grow: 1;
 }

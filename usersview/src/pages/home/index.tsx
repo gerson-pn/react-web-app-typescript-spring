@@ -2,57 +2,85 @@ import { Component } from "react";
 import "./index.css"
 import AuthenticationContext from "../../component/context/authenticationContext";
 import NonRootsLoader from "../../domain/request/nonRootsLoader";
+import { Navigate } from "react-router-dom";
+import SimpleAlert from "../../component/simpleAlert";
+import usersAppType from "../../domain/type/userAppType";
 
-export default class Home extends Component<{}, {}> {
+export default class Home extends Component<{}, usersAppType> {
     static contextType = AuthenticationContext
     constructor(props) {
         super(props)
-        this.load = this.load.bind(this)
+        this.state = {
+            message: '',
+            data: []
+        }
+        this.loadData = this.loadData.bind(this)
+        this.assembleData = this.assembleData.bind(this)
     }
 
-    private load(token: string) {
+    loadData() {
+        let authenticationContext: any = this.context
+        let token = authenticationContext.token
         let noRootsLoader = new NonRootsLoader()
-        noRootsLoader.load(token)
+        let state = noRootsLoader.load(token)
+        state.then(element => {
+            this.setState(element)
+        })
+    }
+
+    componentDidUpdate(prevProps: Readonly<{}>, prevState: Readonly<usersAppType>, snapshot?: any): void {
+        console.log(`Este componente esta atualizando com os dados: `)
+        console.log(this.state)
     }
 
     componentDidMount(): void {
+        /** this line is here just to show the authentication token, used in the request */
         let authenticationContext: any = this.context
         let token = authenticationContext.token
         console.log(`token: ${token}`)
+        /** */
+        if (token !== '') {
+            this.loadData()
+        }
+    }
 
-        this.load(token)
+    assembleData() {
+        let data = this.state.data
+        let component = data.map(userApp =>
+            <div className="card" key={userApp.id}>
+                <div className="card-header">
+                    {userApp.name}
+                </div>
+                <div className="card-body">
+                    <h5 className="card-title">Date registration: {userApp.registration}</h5>
+                    <p className="card-text">Additional Information: </p>
+                    <a href="#" className="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        )
+        return component
+    }
+
+    redirect() {
+        let authenticationContext: any = this.context
+        let token = authenticationContext.token
+        if (token === '') {
+            return (
+                <Navigate to={'/'} />
+            )
+        } else {
+            return (
+                <div className="container">
+                    <SimpleAlert message={this.state.message} type="alert-warning" />
+                    {this.assembleData()}
+                </div>
+            )
+        }
     }
 
     render() {
         return (
-            <div className="container flex-container">
-                <div className="list-group flex-item">
-                    <a href="/" className="list-group-item list-group-item-action active" aria-current="true">
-                        <div className="d-flex w-100 justify-content-between">
-                            <h5 className="mb-1">List group item heading</h5>
-                            <small>3 days ago</small>
-                        </div>
-                        <p className="mb-1">Some placeholder content in a paragraph.</p>
-                        <small>And some small print.</small>
-                    </a>
-                    <a href="/" className="list-group-item list-group-item-action">
-                        <div className="d-flex w-100 justify-content-between">
-                            <h5 className="mb-1">List group item heading</h5>
-                            <small className="text-body-secondary">3 days ago</small>
-                        </div>
-                        <p className="mb-1">Some placeholder content in a paragraph.</p>
-                        <small className="text-body-secondary">And some muted small print.</small>
-                    </a>
-                    <a href="/" className="list-group-item list-group-item-action">
-                        <div className="d-flex w-100 justify-content-between">
-                            <h5 className="mb-1">List group item heading</h5>
-                            <small className="text-body-secondary">3 days ago</small>
-                        </div>
-                        <p className="mb-1">Some placeholder content in a paragraph.</p>
-                        <small className="text-body-secondary">And some muted small print.</small>
-                    </a>
-                </div>
-            </div>
+            <>{this.redirect()}</>
         )
     }
 }

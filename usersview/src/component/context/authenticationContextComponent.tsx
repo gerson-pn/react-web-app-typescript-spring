@@ -1,14 +1,9 @@
-import { Component, ReactElement } from "react"
+import { Component } from "react"
 import AuthenticationContext from "./authenticationContext"
+import authenticationContextType from "../../domain/type/authenticationContextType"
+import authenticationContextPropsType from "../../domain/type/authenticationContextPropsType"
 
-type state = {
-    token: string
-}
-type props = {
-    child: ReactElement
-}
-
-export default class AuthenticationContextComponent extends Component<props, state> {
+export default class AuthenticationContextComponent extends Component<authenticationContextPropsType, authenticationContextType> {
     constructor(props) {
         super(props)
         this.state = { token: '' }
