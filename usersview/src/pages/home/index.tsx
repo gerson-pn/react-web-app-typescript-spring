@@ -2,9 +2,12 @@ import { Component } from "react";
 import "./index.css"
 import AuthenticationContext from "../../component/context/authenticationContext";
 import NonRootsLoader from "../../domain/request/nonRootsLoader";
-import { Navigate } from "react-router-dom";
-import SimpleAlert from "../../component/simpleAlert";
+import SimpleAlert from "../../component/alert/simpleAlert";
 import usersAppType from "../../domain/type/userAppType";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
+import LoginRedirect from "../../component/redirect/loginRedirect";
+import Navbar from "../../component/navbar";
 
 export default class Home extends Component<{}, usersAppType> {
     static contextType = AuthenticationContext
@@ -15,7 +18,7 @@ export default class Home extends Component<{}, usersAppType> {
             data: []
         }
         this.loadData = this.loadData.bind(this)
-        this.assembleData = this.assembleData.bind(this)
+        this.doComponent = this.doComponent.bind(this)
     }
 
     loadData() {
@@ -44,12 +47,12 @@ export default class Home extends Component<{}, usersAppType> {
         }
     }
 
-    assembleData() {
+    doComponent() {
         let data = this.state.data
         let component = data.map(userApp =>
             <div className="card" key={userApp.id}>
                 <div className="card-header">
-                    {userApp.name}
+                    <FontAwesomeIcon icon={faEnvelope} />{userApp.name}
                 </div>
                 <div className="card-body">
                     <h5 className="card-title">Date registration: {userApp.registration}</h5>
@@ -58,29 +61,21 @@ export default class Home extends Component<{}, usersAppType> {
                 </div>
             </div>
         )
-        return component
-    }
-
-    redirect() {
-        let authenticationContext: any = this.context
-        let token = authenticationContext.token
-        if (token === '') {
-            return (
-                <Navigate to={'/'} />
-            )
-        } else {
-            return (
+        return (
+            <>
+                <Navbar />
+                <br />
                 <div className="container">
                     <SimpleAlert message={this.state.message} type="alert-warning" />
-                    {this.assembleData()}
+                    {component}
                 </div>
-            )
-        }
+            </>
+        )
     }
 
     render() {
-        return (
-            <>{this.redirect()}</>
-        )
+        let authenticationContext: any = this.context
+        let token = authenticationContext.token
+        return (<LoginRedirect token={token} component={this.doComponent()} />)
     }
 }

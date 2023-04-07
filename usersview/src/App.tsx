@@ -5,8 +5,6 @@ import NoPage from './pages/nopage';
 import AuthenticationContextComponent from './component/context/authenticationContextComponent';
 import Home from './pages/home';
 
-
-
 export default class App extends Component {
   render() {
     return (

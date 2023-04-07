@@ -13,13 +13,9 @@ import com.store.users.repositories.UserAppRepository;
 public class UserAppService {
 	@Autowired
 	private UserAppRepository repository;
-
-	public List<UserApp> users() {
-		return repository.findAll();
-	}
-
+	
 	public UserApp user(String userName) {
-		List<UserApp> users = this.users();
+		List<UserApp> users = repository.findAll();
 		UserApp target = null;
 		for (UserApp user : users) {
 			if (user.getCredential() != null) {

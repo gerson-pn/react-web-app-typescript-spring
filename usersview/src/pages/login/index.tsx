@@ -4,10 +4,12 @@ import "./index.css"
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import Authenticator from "../../domain/request/authenticator";
-import SimpleAlert from "../../component/simpleAlert";
+import SimpleAlert from "../../component/alert/simpleAlert";
 import AuthenticationContext from "../../component/context/authenticationContext";
-import { Navigate } from "react-router-dom";
 import loginStateType from "../../domain/type/loginStateType";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleUser, faEyeSlash, faKey, faShieldHalved } from "@fortawesome/free-solid-svg-icons";
+import HomeRedirect from "../../component/redirect/homeRedirect";
 
 export default class Login extends Component<{}, loginStateType> {
     static contextType = AuthenticationContext
@@ -17,10 +19,10 @@ export default class Login extends Component<{}, loginStateType> {
         super(props)
         this.username = ''
         this.password = ''
-        this.state = { message: '', token: '' }
+        this.state = { message: '', token: '', userApp: null }
         this.authenticate = this.authenticate.bind(this)
         this.loadData = this.loadData.bind(this)
-        this.redirect = this.redirect.bind(this)
+        this.doComponent = this.doComponent.bind(this)
     }
 
     loadData(event) {
@@ -43,12 +45,12 @@ export default class Login extends Component<{}, loginStateType> {
                 password: this.password
             }
             let authentication = authenticator.authenticate(credential)
-            authentication.then(element => {
-                if (element.message) {
-                    this.setState(element);
-                } else {
+            authentication.then(response =>{
+                if(response.message !== ''){
+                    this.setState(response)
+                }else{
                     let authenticationContext: any = this.context
-                    authenticationContext.setToken(element.token)
+                    authenticationContext.setData(response.token, response.userApp)
                 }
             })
         } else {
@@ -58,40 +60,34 @@ export default class Login extends Component<{}, loginStateType> {
         }
     }
 
-    redirect(token: string) {
-        if (token === '') {
-            return (
-                <div className="container text-center flex-container-login">
-                    <form onSubmit={(event) => this.authenticate(event)} className="flex-item-login">
-                        <SimpleAlert message={this.state.message} type="alert-warning" />
-                        <legend>Authentication</legend>
-                        <div className="input-group mb-3">
-                            <span className="input-group-text" id="basic-addon1">@</span>
-                            <input id="username" onChange={this.loadData} type="text" maxLength={6} className="form-control" placeholder="username" aria-label="username" aria-describedby="basic-addon1" />
-                        </div>
-                        <div className="input-group mb-3">
-                            <span className="input-group-text" id="basic-addon1">#</span>
-                            <input id="password" onChange={this.loadData} type="password" maxLength={6} className="form-control" placeholder="password" aria-label="password" aria-describedby="basic-addon1" />
-                        </div>
-                        <br />
-                        <div className="d-grid gap-2">
-                            <button type="submit" className="btn btn-primary btn-lg">authenticate</button>
-                        </div>
-                    </form>
-                </div>
-            )
-        } else {
-            return (
-                <Navigate to={'/home'} />
-            )
-        }
+    doComponent() {
+        return (
+            <div className="container text-center flex-container-login">
+                <form onSubmit={(event) => this.authenticate(event)} className="flex-item-login">
+                    <SimpleAlert message={this.state.message} type="alert-warning" />
+                    <legend><FontAwesomeIcon icon={faShieldHalved} /> Authentication</legend>
+                    <div className="input-group mb-3">
+                        <span className="input-group-text" id="basic-addon1"><FontAwesomeIcon icon={faCircleUser} /></span>
+                        <input id="username" onChange={this.loadData} type="text" maxLength={6} className="form-control" placeholder="username" aria-label="username" aria-describedby="basic-addon1" />
+                    </div>
+                    <div className="input-group mb-3">
+                        <span className="input-group-text" id="basic-addon1"><FontAwesomeIcon icon={faEyeSlash} /></span>
+                        <input id="password" onChange={this.loadData} type="password" maxLength={6} className="form-control" placeholder="password" aria-label="password" aria-describedby="basic-addon1" />
+                    </div>
+                    <br />
+                    <div className="d-grid gap-2">
+                        <button type="submit" className="btn btn-primary btn-lg"><FontAwesomeIcon icon={faKey} /> authenticate</button>
+                    </div>
+                </form>
+            </div>
+        )
     }
 
     render() {
         let authenticationContext: any = this.context
         let token = authenticationContext.token
         return (
-            <>{this.redirect(token)}</>
+            <HomeRedirect token={token} component={this.doComponent()} />
         )
     }
 }

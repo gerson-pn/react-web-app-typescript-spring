@@ -1,4 +1,7 @@
+import UserApp from "../../model/userApp"
+
 type authenticationContextType = {
-    token: string
+    userApp: UserApp,
+    token: string,
 }
 export default authenticationContextType

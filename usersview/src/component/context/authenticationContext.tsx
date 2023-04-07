@@ -1,13 +1,15 @@
 import { createContext } from "react";
+import contextType from "../../domain/type/contextType";
 
-type contextType = {
-    token: string,
-    setToken: (data: string) => void
-}
+// type contextType = {
+//     token: string,
+//     setToken: (data: string) => void
+// }
 
 const AuthenticationContext = createContext<contextType>({
     token: '',
-    setToken: () => { }
+    userApp: null,
+    setData: () => { }
 })
 
 export default AuthenticationContext

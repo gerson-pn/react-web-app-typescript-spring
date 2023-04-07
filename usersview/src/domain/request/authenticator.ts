@@ -1,3 +1,5 @@
+import Phone from "../../model/phone";
+import UserApp from "../../model/userApp";
 import loginStateType from "../type/loginStateType";
 import { URI } from "../uri/uri";
 import UriMounter from "../uri/uriMounter";
@@ -7,31 +9,44 @@ export default class Authenticator {
         let headers = new Headers()
         headers.append('Content-Type', 'application/json')
         let mounter = new UriMounter()
-        let response = await fetch(mounter.assemble(URI.AUTHENTICATION), {
+        let reponse = await fetch(mounter.assemble(URI.AUTHENTICATION), {
             method: 'POST',
             headers: headers,
             body: JSON.stringify(credential)
+        }).then(response => {
+            if (response.ok) {
+                return response.json()
+            } else {
+                let json: loginStateType = { token: '', message: '', userApp: null }
+                json.message = `something is going wrong - ${response.status}`
+                return json
+            }
         })
-            .then(response => {
-                if (response.ok) {
-                    let object: loginStateType = { token: '', message: '' }
-                    response.headers.forEach(element => {
-                        if (element.startsWith('Bearer ')) {
-                            object.token = element
-                        }
-                    })
+            .then(json => {
+                if (json.token === '') {
+                    let object: loginStateType = { token: '', message: json.message, userApp: null }
                     return object
                 } else {
-                    let object: loginStateType = { token: '', message: '' }
-                    object.message = `something is going wrong - (Status code: ${response.status})`
+                    let userApp = new UserApp()
+                    userApp.id = json.user.id
+                    userApp.name = json.user.name
+                    userApp.registration = json.user.registration
+                    json.user.phones.forEach(jsonPhone => {
+                        let phone = new Phone()
+                        phone.id = jsonPhone.id
+                        phone.number = jsonPhone.number
+                        userApp.phones.push(phone)
+                    })
+                    let object: loginStateType = { token: json.token, message: '', userApp: userApp }
                     return object
                 }
             })
             .catch(error => {
-                let object: loginStateType = { token: '', message: '' }
+                let object: loginStateType = { token: '', message: '', userApp: null }
                 object.message = `something is going wrong - connection fail`
                 return object
             })
-        return response;
+        return reponse;
     }
 }
+

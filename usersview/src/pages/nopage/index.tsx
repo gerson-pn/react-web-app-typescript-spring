@@ -1,6 +1,6 @@
 import { Component } from "react";
 import "./index.css"
-import FullAlert from "../../component/fullAlert";
+import FullAlert from "../../component/alert/fullAlert";
 import AuthenticationContext from "../../component/context/authenticationContext";
 
 export default class NoPage extends Component {
