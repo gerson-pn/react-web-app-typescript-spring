@@ -30,6 +30,7 @@ public class AuthenticatorService {
 	private final String secret = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
 	private final long duration = 9000000;
 
+	
 	public ResponseEntity<?> authenticate(CredentialApp credential) {
 		ResponseEntity<?> response = new ResponseEntity<>(new AuthenticationModel(), HttpStatus.BAD_REQUEST);
 		if (credentialAppValidatorService.isCredentialValid(credential)) {
