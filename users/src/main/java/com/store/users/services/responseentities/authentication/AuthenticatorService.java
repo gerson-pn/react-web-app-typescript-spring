@@ -31,18 +31,15 @@ public class AuthenticatorService {
 	private final long duration = 9000000;
 
 	public ResponseEntity<?> authenticate(CredentialApp credential) {
-		ResponseEntity<?> response = new ResponseEntity<>(new AuthenticationModel(),HttpStatus.BAD_REQUEST);
+		ResponseEntity<?> response = new ResponseEntity<>(new AuthenticationModel(), HttpStatus.BAD_REQUEST);
 		if (credentialAppValidatorService.isCredentialValid(credential)) {
 			UserDetails userDetails = this.userDetailsService.loadUserByUsername(credential.getUserName());
 			if (userDetails != null) {
-				boolean match = encoder.matches(credential.getPassword(), userDetails.getPassword());
-				if (match) {
-					UserApp userApp = userAppService.user(credential.getUserName());
-					String jwtToken = this.jwtService.createToken(userDetails.getUsername(), duration, secret);
-					jwtToken = "Bearer " + jwtToken;
-					AuthenticationModel model = new AuthenticationModel(jwtToken, userApp);
-					response = new ResponseEntity<>(model, HttpStatus.ACCEPTED);
-				}
+				UserApp userApp = userAppService.user(credential.getUserName());
+				String jwtToken = this.jwtService.createToken(userDetails.getUsername(), duration, secret);
+				jwtToken = "Bearer " + jwtToken;
+				AuthenticationModel model = new AuthenticationModel(jwtToken, userApp);
+				response = new ResponseEntity<>(model, HttpStatus.ACCEPTED);
 			}
 		}
 		return response;
