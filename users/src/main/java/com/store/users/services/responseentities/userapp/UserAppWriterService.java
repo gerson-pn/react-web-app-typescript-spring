@@ -1,5 +1,7 @@
 package com.store.users.services.responseentities.userapp;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,8 @@ public class UserAppWriterService {
 				String password = user.getCredential().getPassword();
 				user.getCredential().setPassword(encoder.encode(password));
 			}
+			Date registration = new Date(System.currentTimeMillis());
+			user.setRegistration(registration);
 			repository.save(user);
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		} catch (DataIntegrityViolationException e) {

@@ -1,5 +1,8 @@
 package com.store.users.security.configuration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,11 +32,30 @@ public class SecurityConfiguration {
 
 	@Autowired
 	private JwtFilter filter;
-	
+
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
+		List<String> origins = new ArrayList<>();
+		List<String> methods = new ArrayList<>();
+		List<String> headers = new ArrayList<>();
+
+		origins.add("*");
+		methods.add("GET");
+		methods.add("POST");
+		methods.add("PUT");
+		methods.add("DELETE");
+		headers.add("Authorization");
+		headers.add("Cache-Control");
+		headers.add("Content-Type");
+
+		CorsConfiguration configuration = new CorsConfiguration();
+
+		configuration.setAllowedOrigins(origins);
+		configuration.setAllowedMethods(methods);
+		configuration.setAllowedHeaders(headers);
+
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
 
@@ -58,13 +80,11 @@ public class SecurityConfiguration {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable();
-		
-		http.authorizeHttpRequests()
-		.requestMatchers("/user/signin/**").permitAll()
-		.anyRequest().authenticated();
-		
+
+		http.authorizeHttpRequests().requestMatchers("/user/signin/**").permitAll().anyRequest().authenticated();
+
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		
+
 		http.authenticationProvider(this.authenticationProvider());
 		http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
 		return http.build();

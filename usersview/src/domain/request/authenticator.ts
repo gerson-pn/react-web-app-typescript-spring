@@ -1,3 +1,4 @@
+import CredentialApp from "../../model/credentialApp";
 import Phone from "../../model/phone";
 import UserApp from "../../model/userApp";
 import loginStateType from "../type/loginStateType";
@@ -5,14 +6,14 @@ import { URI } from "../uri/uri";
 import UriMounter from "../uri/uriMounter";
 
 export default class Authenticator {
-    public async authenticate(credential: Object) {
+    public async authenticate(credentialApp: CredentialApp) {
         let headers = new Headers()
         headers.append('Content-Type', 'application/json')
         let mounter = new UriMounter()
         let reponse = await fetch(mounter.assemble(URI.AUTHENTICATION), {
             method: 'POST',
             headers: headers,
-            body: JSON.stringify(credential)
+            body: JSON.stringify(credentialApp)
         }).then(response => {
             if (response.ok) {
                 return response.json()

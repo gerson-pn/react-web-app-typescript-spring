@@ -9,7 +9,8 @@ import AuthenticationContext from "../../component/context/authenticationContext
 import loginStateType from "../../domain/type/loginStateType";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUser, faEyeSlash, faKey, faShieldHalved } from "@fortawesome/free-solid-svg-icons";
-import HomeRedirect from "../../component/redirect/homeRedirect";
+import HomeFilter from "../../component/filter/homeFilter";
+import CredentialApp from "../../model/credentialApp";
 
 export default class Login extends Component<{}, loginStateType> {
     static contextType = AuthenticationContext
@@ -40,11 +41,10 @@ export default class Login extends Component<{}, loginStateType> {
         event.target.reset()
         if (this.username && this.password) {
             let authenticator = new Authenticator()
-            let credential = {
-                userName: this.username,
-                password: this.password
-            }
-            let authentication = authenticator.authenticate(credential)
+            let credentialApp = new CredentialApp()
+            credentialApp.userName = this.username
+            credentialApp.password = this.password
+            let authentication = authenticator.authenticate(credentialApp)
             authentication.then(response =>{
                 if(response.message !== ''){
                     this.setState(response)
@@ -87,7 +87,7 @@ export default class Login extends Component<{}, loginStateType> {
         let authenticationContext: any = this.context
         let token = authenticationContext.token
         return (
-            <HomeRedirect token={token} component={this.doComponent()} />
+            <HomeFilter token={token} component={this.doComponent()} />
         )
     }
 }

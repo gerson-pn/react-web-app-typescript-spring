@@ -17,8 +17,8 @@ public class DeleteController {
 	@Autowired
 	private UserAppDeleterService deleter;
 	
-	@PreAuthorize("hasAuthority('ROLE_ROOT')")
 	@DeleteMapping("/user/delete")
+	@PreAuthorize("hasAuthority('ROLE_ROOT')")
 	public ResponseEntity<?> delete(@RequestBody UserApp user){
 		return deleter.delete(user);
 	}

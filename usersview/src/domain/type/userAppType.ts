@@ -1,8 +1,11 @@
 import UserApp from "../../model/userApp";
 
-type usersAppType = {
+type userAppType = {
+    route: string,
+    redirect: boolean,
+    update: boolean,
     data: UserApp[],
     message: string
 }
 
-export default usersAppType
+export default userAppType

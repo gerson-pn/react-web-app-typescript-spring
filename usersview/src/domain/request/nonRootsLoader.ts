@@ -16,7 +16,7 @@ export default class NonRootsLoader {
             headers: headers
         })
             .then(response => response.json())
-            .then(json =>{
+            .then(json => {
                 let usersApp: UserApp[] = []
 
                 json.forEach(element => {
@@ -24,7 +24,7 @@ export default class NonRootsLoader {
                     userApp.id = element.id
                     userApp.name = element.name
                     userApp.registration = element.registration
-                    element.phones.forEach(elementPhone =>{
+                    element.phones.forEach(elementPhone => {
                         let phone = new Phone()
                         phone.id = elementPhone.id
                         phone.number = elementPhone.number
@@ -34,17 +34,21 @@ export default class NonRootsLoader {
                 });
 
                 let message = ''
-                if(usersApp.length === 0){
+                if (usersApp.length === 0) {
                     message = `No data to be displayed.`
                 }
-                let build: usersAppType = {data: usersApp, message: message}
-                return build
+                let object: usersAppType = {
+                    data: usersApp, message: message, update: false, redirect: false, route: ''
+                }
+                return object
             })
             .catch(error => {
                 let usersApp: UserApp[] = []
                 let message = 'There was a problem connecting to the server.'
-                let build: usersAppType = {data: usersApp, message: message}
-                return build
+                let object: usersAppType = {
+                    data: usersApp, message: message, update: false, redirect: false, route: ''
+                }
+                return object
             })
         return response;
     }
