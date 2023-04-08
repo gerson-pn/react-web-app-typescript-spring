@@ -14,13 +14,12 @@ import com.store.users.services.responseentities.userapp.UserAppUpdaterService;
 @CrossOrigin
 @RestController
 public class PutController {
-
 	@Autowired
 	private UserAppUpdaterService updater;
 
 	@PreAuthorize("hasAuthority('ROLE_ROOT')")
-	@PutMapping("user/update")
-	private ResponseEntity<UserApp> update(@RequestBody UserApp user) {
+	@PutMapping("/user/update")
+	public ResponseEntity<UserApp> update(@RequestBody UserApp user) {
 		return updater.update(user);
 	}
 }
